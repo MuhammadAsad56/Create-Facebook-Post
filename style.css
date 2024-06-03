@@ -1,0 +1,179 @@
+.header {
+    width: 100%;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+    background-color: white;
+    top: 0;
+    box-shadow: 0 5px 8px -9px rgba(0, 0, 0, 0.75);
+}
+.header_left img {
+    height: 30px;
+}
+
+.header_right img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+.header_left {
+    display: flex;
+    align-items: center;
+}
+
+.header_input {
+    display: flex;
+    background-color: #eff2f5;
+    padding: 10px;
+    margin-left: 5px;
+    border-radius: 999px;
+}
+
+.header_input input {
+    border: none;
+    background: transparent;
+    outline-width: 0;
+}
+
+/* header left side end */
+.header_middle {
+    display: flex;
+    align-items: center;
+}
+
+.header_option {
+    padding: 0px 30px;
+}
+
+.header_option .material-symbols-outlined {
+    font-size: xx-large;
+    cursor: pointer;
+}
+
+.header_option .material-symbols-outlined:hover {
+    color: rgb(57, 57, 244);
+}
+
+.header_option .active {
+    border-bottom: 4px solid blue;
+}
+
+.header_option:hover {
+    background-color: #eff2f5;
+    border-radius: 10px;
+}
+
+/* header middle side end */
+.header_right {
+    display: flex;
+    align-items: center;
+}
+.header_right h4 {
+    margin-left: 5px;
+}
+.header_right .material-symbols-outlined {
+    color: gray;
+    margin: 0px 5px;
+    cursor: pointer;
+}
+@media only screen and (max-width: 960px){
+    .header{
+        flex-wrap: wrap;
+    }
+    .header_right{
+        display: none;
+    }
+    .header_middle{
+       margin-top: 9px;
+    }
+}
+.main{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f1f2f5;
+    min-width: 100%;
+    background-attachment: fixed;
+    width: max-content;
+}
+.fbData{
+   margin: 7px auto;
+   box-shadow: 0px 0px 7px lightgrey;
+   background-color: white;
+}
+.fbData .input{
+     margin: 12px;
+}
+.fbData .input label{
+    text-align: justify;
+}
+.fbData .input input{
+   border: 0;
+   outline: 0;
+   background-color: #f3f6f8;
+   border-radius: 999px;
+   height: 30px;
+   width: 190px;
+}
+.btn{
+    margin: 8px;
+}
+/* fb post start here  */
+
+#fbPost{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.gap{
+    margin-top: 30px;
+    background-color: white;
+} 
+.userImgUrl{
+   display: flex;
+   align-items: center;
+   position: relative;
+}
+.userImgUrl img{
+   height: 40px;
+}
+#btn1{
+    position: absolute;
+    right: 10px;
+}
+.postImgUrl img{
+   width: 100%;
+}
+.post-reaction{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.postReact{
+    display: flex;
+    align-items: center;
+    margin: 15px;
+}
+.postReact h6{
+    margin-left: 5px;
+}
+@media only screen and (max-width:390px){
+    #fbPost{
+        width: 340px;
+    }
+    .postImgUrl img{
+        width: 340px;
+    }
+    .header{
+        display: flex;
+        overflow-x: hidden;
+    }
+    .header_right{
+       display: none;
+    }
+    .header_middle{
+       display: none;
+    }
+}
