@@ -54,7 +54,7 @@ function getData(){
  const reference = ref(db, "post/");
  onValue(reference, function(postData){
    var allData = postData.val();
-   var arr = Object.values(allData);
+   var arr = Object.values(allData).reverse();
    for(var i = 0; i < arr.length; i++){
       var data = arr[i]
       id = data.id
