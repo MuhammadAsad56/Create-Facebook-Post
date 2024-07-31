@@ -170,9 +170,5 @@ async function getData(){
 }
 getData()
 
-window.deletePost = function(id){
-   var reference = ref(db , `post/${id}`);
-   remove(reference)
- }
 
 
