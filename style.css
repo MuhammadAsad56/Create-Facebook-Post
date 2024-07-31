@@ -106,7 +106,13 @@
 .fbData .input{
      margin: 12px;
 }
+.fbData .input_url{
+     margin: 12px;
+}
 .fbData .input label{
+    text-align: justify;
+}
+.fbData .input_ label{
     text-align: justify;
 }
 .fbData .input input{
@@ -115,7 +121,14 @@
    background-color: #f3f6f8;
    border-radius: 999px;
    height: 30px;
-   width: 190px;
+   width: 210px;
+}
+.fbData .input_url input{
+   border: 0;
+   outline: 0;
+   background-color: #f3f6f8;
+   height: 30px;
+   width: 210px;
 }
 .btn{
     margin: 8px;

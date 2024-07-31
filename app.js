@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-analytics.js";
-import {set, push, ref, getDatabase, onValue, remove  } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
-
+import {getFirestore ,collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+import { getStorage,ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
 
 const firebaseConfig = {
@@ -19,79 +19,155 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const db = getDatabase()
+const db = getFirestore ();
+const storage = getStorage();
 var id;
 
-var postUrl = document.getElementById("postUrl")
+let imgUrl = document.getElementById("imgUrl")
+let postUrl = document.getElementById("postUrl")
+
+let uploads = () => {
+    return new Promise((resolve,reject)=>{
+        let files = imgUrl.files[0]
+        const randoNum = Math.random().toString().slice(2)
+        const storageRef = ref(storage, `images/${randoNum}`);
+        const uploadTask = uploadBytesResumable(storageRef, files);
+        
+        uploadTask.on('state_changed', 
+          (snapshot) => {
+        
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          }, 
+          (error) => {
+            reject(error.message)
+            // Handle unsuccessful uploads
+          }, 
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log('File available at', downloadURL);
+              resolve(downloadURL)
+            });
+          }
+        );
+
+    })
+}
+    let uploads_2 = () => {
+        return new Promise((resolve,reject)=>{
+            let file2 = postUrl.files[0]
+            const randoNum = Math.random().toString().slice(2)
+            const storageRef = ref(storage, `images/${randoNum}`);
+            const uploadTask = uploadBytesResumable(storageRef, file2);
+            
+            uploadTask.on('state_changed', 
+              (snapshot) => {
+            
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                  case 'paused':
+                    console.log('Upload is paused');
+                    break;
+                  case 'running':
+                    console.log('Upload is running');
+                    break;
+                }
+              }, 
+              (error) => {
+                reject(error.message)
+                // Handle unsuccessful uploads
+              }, 
+              () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                  console.log('File available at', downloadURL);
+                  resolve(downloadURL)
+                });
+              }
+            );
+    
+        })
+    }
+
+
 var postName = document.getElementById("postName")
 var description = document.getElementById("description")
-var imgUrl = document.getElementById("imgUrl")
 
 window.addData = function (){
-    if (postUrl.value && postName.value && imgUrl.value){
-        var obj = {
-         postUrl : postUrl.value,
-         postName : postName.value,
-         description : description.value,
-         imgUrl : imgUrl.value
-        };
-        obj.id = push(ref(db, "post")).key
-        var reference = ref(db , `post/${obj.id}`);
-        set(reference, obj)
-       
-      
-        console.log(obj);
-        postUrl.value = "", postName.value = "", description.value = "", imgUrl.value = ""
-    }else{
-        alert("please enter all required data")
-    }
-//    var reference = ref(db ,`task/`);
-//    push(reference, obj)
+            var obj = {
+             postName : postName.value,
+             description : description.value,
+            };
+            uploads().then(res => {
+                obj.imgUrl = res
+                uploads_2().then(async res =>{
+                    obj.postUrl = res
+                    let reference = collection(db, "posts")
+                    let result = await addDoc(reference, obj)
+                    console.log(obj);
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
+            })
+            .catch(err=>console.log(err))
 };
 var fbPost = document.getElementById("fbPost")
 
-function getData(){
- const reference = ref(db, "post/");
- onValue(reference, function(postData){
-   var allData = postData.val();
-   var arr = Object.values(allData).reverse();
-   for(var i = 0; i < arr.length; i++){
-      var data = arr[i]
-      id = data.id
-      fbPost.innerHTML +=
-      `<div class="gap">
-      <div class="userImgUrl" style="margin-left: 9px;">
-      <img src="${data.postUrl}" alt="">
-      <button id="btn1" onclick="deletePost('${id}')" class="btn btn-primary">Delete</button>
-      <div style="margin-left: 14px; margin-top:12px">
-          <h6 style="margin-top:12px;">${data.postName}</h6>
-         <p> ${moment().endOf('day').fromNow()}</p>
-      </div>
-    </div>  
-    <div class="description" style="margin-left: 9px;">
-        <p>${data.description.slice(0,60)}...</p>
+let products = []
+async function getData(){
+    const reference = collection(db, "posts")
+    let  result = await getDocs(reference)
+    result.forEach(docs => {
+        let dataobj = {
+            id: docs.id,
+            ...docs.data()
+        }
+    let {description, imgUrl, postName, postUrl, id} = dataobj
+    console.log("posturl=> ",postUrl);
+    console.log("imgurl=> ",imgUrl);
+
+    fbPost.innerHTML +=
+    `<div class="gap">
+    <div class="userImgUrl" style="margin-left: 9px;">
+    <img src="${postUrl}" alt="">
+    <button id="btn1" onclick="deletePost('${id}')" class="btn btn-primary">Delete</button>
+    <div style="margin-left: 14px; margin-top:12px">
+        <h6 style="margin-top:12px;">${postName}</h6>
+       <p> ${moment().fromNow()}</p>
     </div>
-    <div class="postImgUrl">
-        <img src="${data.imgUrl}" alt="">
-    </div>  
-    <div class="post-reaction">
-    <div class="postReact">
-        <span class="material-symbols-outlined">thumb_up</span>
-        <h6>Like</h6>
-    </div>
-    <div class="postReact">
-        <span class="material-symbols-outlined">comment</span>
-        <h6>Comment</h6>
-    </div>
-    <div class="postReact">
-        <span class="material-symbols-outlined">forward</span>
-        <h6>Share</h6>
-    </div>
- </div>
-    </div>
-      `
-   }
- })
+  </div>  
+  <div class="description" style="margin-left: 9px;">
+      <p>${description.slice(0,60)}...</p>
+  </div>
+  <div class="postImgUrl">
+      <img src="${imgUrl}" alt="">
+  </div>  
+  <div class="post-reaction">
+  <div class="postReact">
+      <span class="material-symbols-outlined">thumb_up</span>
+      <h6>Like</h6>
+  </div>
+  <div class="postReact">
+      <span class="material-symbols-outlined">comment</span>
+      <h6>Comment</h6>
+  </div>
+  <div class="postReact">
+      <span class="material-symbols-outlined">forward</span>
+      <h6>Share</h6>
+  </div>
+</div>
+  </div>
+    `
+});
 }
 getData()
 
