@@ -153,10 +153,6 @@
 .userImgUrl img{
    height: 40px;
 }
-#btn1{
-    position: absolute;
-    right: 10px;
-}
 .postImgUrl img{
    width: 100%;
 }

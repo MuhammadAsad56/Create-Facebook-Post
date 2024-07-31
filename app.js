@@ -139,7 +139,6 @@ async function getData(){
     `<div class="gap">
     <div class="userImgUrl" style="margin-left: 9px;">
     <img src="${postUrl}" alt="">
-    <button id="btn1" onclick="deletePost('${id}')" class="btn btn-primary">Delete</button>
     <div style="margin-left: 14px; margin-top:12px">
         <h6 style="margin-top:12px;">${postName}</h6>
        <p> ${moment().fromNow()}</p>
